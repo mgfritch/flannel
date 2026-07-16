@@ -118,7 +118,7 @@ e2e-test: bash_unit dist/flanneld-$(TAG)-$(ARCH).docker
 
 chart-test:
 	@if ! helm plugin list | awk 'NR>1 {print $$1}' | grep -qx unittest; then \
-		helm plugin install https://github.com/helm-unittest/helm-unittest; \
+		helm plugin install --verify=false https://github.com/helm-unittest/helm-unittest; \
 	fi
 	helm unittest ./chart/kube-flannel
 
