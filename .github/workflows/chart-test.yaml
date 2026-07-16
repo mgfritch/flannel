@@ -1,0 +1,39 @@
+name: chart test
+
+on: pull_request
+
+permissions:
+  contents: read
+
+jobs:
+  chart-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: Azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 #v5.0.1
+
+      - name: Install helm-unittest plugin
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest --version v1.1.1
+
+      - name: Run helm-unittest
+        run: helm unittest ./chart/kube-flannel
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 #v6.3.0
+        with:
+          python-version: "3.x"
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f #v2.8.0
+
+      - name: Fetch pull request base branch
+        run: git fetch --no-tags --force origin "${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}"
+
+      - name: Run chart-testing lint
+        run: make chart-lint TARGET_BRANCH="${{ github.event.pull_request.base.ref }}"
