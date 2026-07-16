@@ -4,8 +4,6 @@
 
 {{- define "flannel.selectorLabels" -}}
 app: "flannel"
-app.kubernetes.io/name: {{ include "flannel.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{- define "flannel.chart" -}}
@@ -16,6 +14,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- define "flannel.labels" -}}
 tier: "node"
 helm.sh/chart: {{ include "flannel.chart" . }}
+app.kubernetes.io/name: {{ include "flannel.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ include "flannel.selectorLabels" . }}
