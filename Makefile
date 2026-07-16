@@ -1,4 +1,4 @@
-.PHONY: test unit-test e2e-test deps cover gofmt gofmt-fix license-check clean tar.gz release buildx-create-builder build-multi-arch release-manifest release-helm
+.PHONY: test unit-test e2e-test deps cover gofmt gofmt-fix license-check clean tar.gz release buildx-create-builder build-multi-arch release-manifest release-helm chart-lint
 
 # Registry used for publishing images
 REGISTRY?=quay.io/coreos/flannel
@@ -184,6 +184,9 @@ release-helm:
 	mv chart/flannel-$(TAG).tgz chart/flannel.tgz
 	wget https://flannel-io.github.io/flannel/index.yaml -O chart/index.yaml
 	helm repo index --merge chart/index.yaml --url https://github.com/flannel-io/flannel/releases/download/$(TAG)/ chart/
+
+chart-lint:
+	ct lint --charts ./chart/kube-flannel $(if $(TARGET_BRANCH),--target-branch $(TARGET_BRANCH),)
 
 dist/qemu-%-static:
 	@if [ -z "$(QEMU_ASSET_$*)" ]; then \

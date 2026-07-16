@@ -4,6 +4,9 @@ description: Install Flannel Network Plugin.
 keywords:
 - Flannel
 name: flannel
+maintainers:
+- name: flannel-io
+  url: https://github.com/flannel-io
 sources:
 - https://github.com/flannel-io/flannel
 version: v0.28.4
