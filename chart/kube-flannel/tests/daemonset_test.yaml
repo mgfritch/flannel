@@ -82,3 +82,15 @@ tests:
       - equal:
           path: spec.template.spec.nodeSelector["eks.amazonaws.com/compute-type"]
           value: hybrid
+
+  - it: selector.matchLabels must not change (helm upgrade is immutable)
+    set:
+      global.commonLabels:
+        should-not-appear: "true"
+      flannel.podLabels:
+        should-not-appear: "true"
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app: flannel
